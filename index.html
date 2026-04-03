@@ -39,8 +39,6 @@
   }
   .week-badge { display:inline-block; background:rgba(255,255,255,0.25); border-radius:20px; padding:2px 10px; margin-right:8px; font-size:12px; }
   .container { max-width:700px; margin:0 auto; padding:20px 18px 50px; position:relative; z-index:1; }
-
-  /* INTRO */
   .intro-hero { text-align:center; padding:32px 0 20px; }
   .trophy-icon { font-size:72px; display:block; margin:0 auto 12px; animation:bounce 2s ease-in-out infinite; }
   @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
@@ -70,8 +68,6 @@
   .field-group input.error { border-color:var(--wrong); background:#FFF5F5; }
   .btn-start { width:100%; background:linear-gradient(135deg,var(--peach) 0%,#FF6B3D 100%); color:white; border:none; border-radius:16px; padding:16px; font-size:17px; font-weight:700; font-family:inherit; cursor:pointer; margin-top:8px; box-shadow:0 6px 20px rgba(255,100,60,0.3); transition:transform 0.15s,box-shadow 0.15s; display:flex; align-items:center; justify-content:center; gap:8px; }
   .btn-start:hover { transform:translateY(-2px); box-shadow:0 10px 24px rgba(255,100,60,0.35); }
-
-  /* QUIZ */
   .quiz-header { background:white; border-radius:18px; padding:16px 22px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; border:1.5px solid var(--border); box-shadow:0 3px 12px rgba(0,0,0,0.06); }
   .q-meta { display:flex; align-items:center; gap:12px; }
   .q-type-badge { padding:6px 14px; border-radius:20px; font-size:13px; font-weight:700; letter-spacing:0.05em; }
@@ -111,8 +107,6 @@
   .btn-prev:hover { border-color:var(--navy-soft); color:var(--navy); }
   .btn-next { background:linear-gradient(135deg,var(--peach) 0%,#FF6B3D 100%); color:white; border:none; box-shadow:0 4px 14px rgba(255,100,60,0.3); }
   .btn-next:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(255,100,60,0.35); }
-
-  /* SUBMIT */
   .review-header { text-align:center; padding:24px 0 16px; }
   .review-header h2 { font-size:22px; font-weight:900; color:var(--navy); font-family:'Gmarket Sans',sans-serif; }
   .review-header p { font-size:13px; color:var(--warm-gray); margin-top:6px; }
@@ -135,22 +129,16 @@
   .btn-submit:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
   .btn-back-quiz { width:100%; background:white; color:var(--warm-gray); border:1.5px solid var(--border); border-radius:16px; padding:13px; font-size:14px; font-weight:500; font-family:inherit; cursor:pointer; margin-top:8px; transition:all 0.15s; }
   .btn-back-quiz:hover { border-color:var(--navy-soft); color:var(--navy); }
-
-  /* SENDING */
   .sending-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.92); z-index:100; display:none; flex-direction:column; align-items:center; justify-content:center; gap:16px; }
   .sending-overlay.show { display:flex; }
   .spinner { width:48px; height:48px; border:4px solid var(--border); border-top-color:var(--peach); border-radius:50%; animation:spin 0.8s linear infinite; }
   @keyframes spin { to{transform:rotate(360deg)} }
   .sending-overlay p { font-size:15px; font-weight:700; color:var(--navy); }
-
-  /* COMPLETE */
   .complete-page { text-align:center; padding:32px 0; }
   .complete-icon { font-size:80px; animation:pop 0.5s cubic-bezier(0.36,1.6,0.6,1) both; }
   @keyframes pop { from{transform:scale(0)} to{transform:scale(1)} }
   .complete-page h2 { font-family:'Gmarket Sans',sans-serif; font-size:26px; font-weight:700; color:var(--navy); margin:16px 0 8px; }
   .complete-page > p { font-size:14px; color:var(--warm-gray); line-height:1.7; }
-
-  /* ADMIN */
   .admin-locked { margin-top:20px; background:white; border-radius:18px; padding:24px; border:1.5px solid var(--border); text-align:center; }
   .admin-locked .lock-icon { font-size:36px; margin-bottom:10px; }
   .admin-locked h4 { font-size:15px; font-weight:700; color:var(--navy); margin-bottom:6px; }
@@ -179,7 +167,6 @@
   .db-table td { padding:8px; border-bottom:1px solid var(--border); color:var(--navy); }
   .db-table tr:hover td { background:var(--peach-pale); }
   .empty-db { font-size:13px; color:var(--warm-gray); text-align:center; padding:20px; }
-
   @media(max-width:480px){
     .form-row { grid-template-columns:1fr; }
     .info-rows { grid-template-columns:1fr; }
@@ -194,7 +181,6 @@
 <body>
 
 <div class="stars-bg" id="starsBg"></div>
-
 <div class="sending-overlay" id="sendingOverlay">
   <div class="spinner"></div>
   <p>제출 중입니다. 잠시만 기다려 주세요...</p>
@@ -319,7 +305,6 @@
         <p>청렴 마일리지 5점이 적립됩니다. 우수자 발표를 기대해 주세요!</p>
       </div>
     </div>
-
     <div class="admin-locked" id="adminLocked">
       <div class="lock-icon">🔐</div>
       <h4>담당자 전용 화면</h4>
@@ -330,7 +315,6 @@
       </div>
       <div class="pw-error" id="pwError">비밀번호가 올바르지 않습니다.</div>
     </div>
-
     <div class="admin-area" id="adminArea">
       <div class="admin-header">
         <h3>📊 담당자 관리 화면</h3>
@@ -362,7 +346,7 @@ const ADMIN_PW   = '1234';  // ← 원하는 비밀번호로 변경하세요
 // ========================================================
 
 // ========================================================
-// ★ 퀴즈 문항 영역 ★  (문항 교체 시 이 부분만 수정)
+// ★ 퀴즈 문항 영역 ★
 // ========================================================
 const questions = [
   { type:'ox', text:'Q1. 공직자는 직무 관련 여부와 무관하게 동일인으로부터 1회 100만 원, 연간 300만 원을 초과하는 금품을 수수하면 형사 처벌을 받을 수 있다. (청탁금지법 기준)', answer:'O' },
@@ -372,24 +356,9 @@ const questions = [
   { type:'ox', text:'Q5. 공직자는 직무와 관련된 이해충돌이 발생할 우려가 있는 경우, 이를 기관에 신고·회피해야 할 의무가 있다. (이해충돌방지법 기준)', answer:'O' },
   { type:'ox', text:'Q6. 내부 공익신고자는 신고를 이유로 불이익 조치를 받은 경우, 국민권익위원회에 보호 조치를 신청할 수 있다.', answer:'O' },
   { type:'ox', text:'Q7. 공직자 행동강령상 직무 관련자로부터 제공받은 골프 접대는 사회상규에 따른 의례적 행위로 허용된다.', answer:'X' },
-  {
-    type:'multi',
-    text:'Q8. 청탁금지법상 공직자가 예외적으로 수수할 수 있는 금품이 아닌 것은?',
-    choices:['원활한 직무 수행을 위한 3만 원 이내의 식사 제공','직무와 관련 없는 지인으로부터의 5만 원 이내 선물','직무 관련자가 제공하는 10만 원 상당의 경조사비','소속 기관이 허가한 외부 강연 사례금'],
-    answer:2
-  },
-  {
-    type:'multi',
-    text:'Q9. 「공직자의 이해충돌 방지법」에 따라 공직자가 반드시 신고해야 하는 경우에 해당하지 않는 것은?',
-    choices:['본인이 담당하는 계약 업무에 가족이 관련 업체 임원으로 재직 중인 경우','퇴직 전 2년간 소속했던 부서의 업무를 처리하는 경우','이전 직장에서 근무한 민간 기업과 직무 관련성이 없는 업무를 담당하는 경우','직무 관련 부동산을 보유하고 있는 사실을 알게 된 경우'],
-    answer:2
-  },
-  {
-    type:'multi',
-    text:'Q10. 다음 중 청렴 문화 확산을 위한 공공기관의 의무로 옳은 것을 모두 고른 것은?',
-    choices:['연 1회 이상 청렴 교육 실시','청렴도 측정 결과 공개','공익신고자 보호 절차 마련','위 세 가지 모두 해당'],
-    answer:3
-  }
+  { type:'multi', text:'Q8. 청탁금지법상 공직자가 예외적으로 수수할 수 있는 금품이 아닌 것은?', choices:['원활한 직무 수행을 위한 3만 원 이내의 식사 제공','직무와 관련 없는 지인으로부터의 5만 원 이내 선물','직무 관련자가 제공하는 10만 원 상당의 경조사비','소속 기관이 허가한 외부 강연 사례금'], answer:2 },
+  { type:'multi', text:'Q9. 「공직자의 이해충돌 방지법」에 따라 공직자가 반드시 신고해야 하는 경우에 해당하지 않는 것은?', choices:['본인이 담당하는 계약 업무에 가족이 관련 업체 임원으로 재직 중인 경우','퇴직 전 2년간 소속했던 부서의 업무를 처리하는 경우','이전 직장에서 근무한 민간 기업과 직무 관련성이 없는 업무를 담당하는 경우','직무 관련 부동산을 보유하고 있는 사실을 알게 된 경우'], answer:2 },
+  { type:'multi', text:'Q10. 다음 중 청렴 문화 확산을 위한 공공기관의 의무로 옳은 것을 모두 고른 것은?', choices:['연 1회 이상 청렴 교육 실시','청렴도 측정 결과 공개','공익신고자 보호 절차 마련','위 세 가지 모두 해당'], answer:3 }
 ];
 // ========================================================
 
@@ -492,16 +461,25 @@ async function submitQuiz(){
     setTimeout(()=>{ showPage('page-quiz'); renderQuiz(); },1800);
     return;
   }
+
   const now=new Date();
   const dt=now.toLocaleString('ko-KR',{timeZone:'Asia/Seoul'});
   const ansLabels=answers.map((a,i)=>a===null?'미응답':(questions[i].type==='ox'?a:['①','②','③','④'][a]));
-  const payload={ datetime:dt, dept:userDept, name:userName, q1:ansLabels[0], q2:ansLabels[1], q3:ansLabels[2], q4:ansLabels[3], q5:ansLabels[4], q6:ansLabels[5], q7:ansLabels[6], q8:ansLabels[7], q9:ansLabels[8], q10:ansLabels[9] };
+
+  // doGet 방식: URL 파라미터로 전송
+  const params = new URLSearchParams({
+    datetime: dt,
+    dept: userDept,
+    name: userName,
+    q1:ansLabels[0], q2:ansLabels[1], q3:ansLabels[2], q4:ansLabels[3], q5:ansLabels[4],
+    q6:ansLabels[5], q7:ansLabels[6], q8:ansLabels[7], q9:ansLabels[8], q10:ansLabels[9]
+  });
 
   document.getElementById('sendingOverlay').classList.add('show');
   document.getElementById('btnSubmit').disabled=true;
 
   try {
-    await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    await fetch(`${SCRIPT_URL}?${params.toString()}`, { method:'GET', mode:'no-cors' });
   } catch(err) { console.warn('전송 오류:', err); }
 
   db.push({ seq:db.length+1, datetime:dt, dept:userDept, name:userName, answers:[...answers] });
