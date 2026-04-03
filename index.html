@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>도전 청렴 퀴즈왕!</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Gmarket+Sans:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --peach: #FF8C69;
+    --peach-light: #FFF0EB;
+    --peach-pale: #FFF8F5;
+    --mint: #52C9A0;
+    --mint-light: #E8F9F3;
+    --gold: #F5A623;
+    --gold-light: #FFF8E6;
+    --navy: #2C3E6B;
+    --navy-soft: #4A5A8A;
+    --cream: #FFFDF8;
+    --warm-gray: #8A8070;
+    --border: #EDE8E0;
+    --correct: #52C9A0;
+    --wrong: #FF6B6B;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: linear-gradient(160deg, #FFF0E8 0%, #FFFDF5 40%, #EDF5FF 100%);
+    min-height: 100vh; color: var(--navy);
+  }
+  .page { display: none; }
+  .page.active { display: block; }
+  .stars-bg { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:hidden; }
+  .star-dec { position:absolute; border-radius:50%; background:var(--gold); opacity:0.12; animation:float 6s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  .top-banner {
+    background: linear-gradient(135deg, #FF7A55 0%, #FF9B6B 50%, #FFBF80 100%);
+    color:white; text-align:center; padding:9px 16px; font-size:13px; font-weight:500; position:relative; z-index:10;
+  }
+  .week-badge { display:inline-block; background:rgba(255,255,255,0.25); border-radius:20px; padding:2px 10px; margin-right:8px; font-size:12px; }
+  .container { max-width:700px; margin:0 auto; padding:20px 18px 50px; position:relative; z-index:1; }
+
+  /* INTRO */
+  .intro-hero { text-align:center; padding:32px 0 20px; }
+  .trophy-icon { font-size:72px; display:block; margin:0 auto 12px; animation:bounce 2s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .event-title { font-family:'Gmarket Sans','Noto Sans KR',sans-serif; font-size:40px; font-weight:700; color:var(--peach); text-shadow:2px 2px 0 rgba(255,100,50,0.15); line-height:1.3; margin-bottom:8px; }
+  .event-subtitle { font-size:14px; color:var(--navy-soft); opacity:0.8; }
+  .info-card { background:white; border-radius:20px; padding:20px; margin:16px 0; border:1.5px solid var(--border); box-shadow:0 4px 16px rgba(255,120,80,0.08); }
+  .info-card h3 { font-size:13px; color:var(--warm-gray); margin-bottom:12px; letter-spacing:0.08em; display:flex; align-items:center; gap:6px; }
+  .info-rows { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .info-row-single { grid-column:1/-1; }
+  .info-item { background:var(--peach-pale); border-radius:12px; padding:12px 14px; display:flex; align-items:flex-start; gap:8px; }
+  .info-item .icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+  .info-item .label { font-size:11px; color:var(--warm-gray); }
+  .info-item .value { font-size:13px; font-weight:700; color:var(--navy); margin-top:2px; line-height:1.5; }
+  .notice-box { background:var(--mint-light); border:1.5px solid #B8EEDD; border-radius:14px; padding:12px 14px; margin:12px 0; display:flex; gap:8px; align-items:flex-start; }
+  .notice-box .icon { font-size:16px; flex-shrink:0; }
+  .notice-box p { font-size:12px; color:#2A7A5A; line-height:1.6; }
+  .error-box { background:#FFF0F0; border:1.5px solid #FFBEBE; border-radius:14px; padding:12px 14px; margin:10px 0; display:none; gap:8px; align-items:flex-start; }
+  .error-box.show { display:flex; }
+  .error-box p { font-size:12px; color:#C0392B; line-height:1.6; font-weight:500; }
+  .form-section { background:white; border-radius:20px; padding:20px; margin:16px 0; border:1.5px solid var(--border); box-shadow:0 4px 16px rgba(255,120,80,0.08); }
+  .form-section h3 { font-size:14px; font-weight:700; color:var(--navy); margin-bottom:14px; display:flex; align-items:center; gap:6px; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .field-group { display:flex; flex-direction:column; gap:6px; }
+  .field-group label { font-size:12px; color:var(--warm-gray); font-weight:500; }
+  .field-group input { border:1.5px solid var(--border); border-radius:10px; padding:10px 12px; font-size:14px; font-family:inherit; color:var(--navy); background:var(--cream); transition:border-color 0.2s; width:100%; }
+  .field-group input:focus { outline:none; border-color:var(--peach); background:white; }
+  .field-group input.error { border-color:var(--wrong); background:#FFF5F5; }
+  .btn-start { width:100%; background:linear-gradient(135deg,var(--peach) 0%,#FF6B3D 100%); color:white; border:none; border-radius:16px; padding:16px; font-size:17px; font-weight:700; font-family:inherit; cursor:pointer; margin-top:8px; box-shadow:0 6px 20px rgba(255,100,60,0.3); transition:transform 0.15s,box-shadow 0.15s; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .btn-start:hover { transform:translateY(-2px); box-shadow:0 10px 24px rgba(255,100,60,0.35); }
+
+  /* QUIZ */
+  .quiz-header { background:white; border-radius:18px; padding:16px 22px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; border:1.5px solid var(--border); box-shadow:0 3px 12px rgba(0,0,0,0.06); }
+  .q-meta { display:flex; align-items:center; gap:12px; }
+  .q-type-badge { padding:6px 14px; border-radius:20px; font-size:13px; font-weight:700; letter-spacing:0.05em; }
+  .badge-ox { background:var(--peach-light); color:var(--peach); }
+  .badge-multi { background:var(--gold-light); color:#C07A10; }
+  .q-num { font-size:16px; font-weight:700; color:var(--navy); }
+  .q-count { font-size:14px; color:var(--warm-gray); font-weight:500; }
+  .progress-wrap { background:var(--peach-pale); border-radius:20px; padding:12px 18px; margin-bottom:18px; display:flex; align-items:center; gap:12px; }
+  .progress-label { font-size:13px; color:var(--warm-gray); white-space:nowrap; }
+  .progress-bar { flex:1; height:10px; background:var(--border); border-radius:10px; overflow:hidden; }
+  .progress-fill { height:100%; background:linear-gradient(90deg,var(--peach),var(--gold)); border-radius:10px; transition:width 0.4s ease; }
+  .progress-pct { font-size:13px; font-weight:700; color:var(--peach); min-width:36px; text-align:right; }
+  .question-card { background:white; border-radius:22px; padding:28px 26px 30px; margin-bottom:18px; border:1.5px solid var(--border); box-shadow:0 4px 20px rgba(0,0,0,0.07); }
+  .question-text { font-size:17px; font-weight:700; color:var(--navy); line-height:1.75; margin-bottom:28px; }
+  .ox-wrap { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .ox-btn { border:2.5px solid var(--border); border-radius:20px; padding:32px 10px; font-size:56px; cursor:pointer; background:white; transition:all 0.2s; text-align:center; display:flex; flex-direction:column; align-items:center; gap:10px; }
+  .ox-label { font-size:15px; font-weight:700; color:var(--warm-gray); letter-spacing:0.05em; }
+  .ox-btn:hover { transform:scale(1.04); border-color:var(--peach); box-shadow:0 6px 20px rgba(255,120,80,0.15); }
+  .ox-btn.selected-O { border-color:var(--correct); background:var(--mint-light); box-shadow:0 6px 20px rgba(82,201,160,0.2); }
+  .ox-btn.selected-O .ox-label { color:var(--mint); }
+  .ox-btn.selected-X { border-color:var(--wrong); background:#FFF0F0; box-shadow:0 6px 20px rgba(255,107,107,0.2); }
+  .ox-btn.selected-X .ox-label { color:var(--wrong); }
+  .choice-list { display:flex; flex-direction:column; gap:12px; }
+  .choice-btn { border:1.5px solid var(--border); border-radius:16px; padding:16px 18px; cursor:pointer; background:white; transition:all 0.18s; text-align:left; display:flex; align-items:flex-start; gap:14px; font-family:inherit; color:var(--navy); }
+  .choice-btn:hover { border-color:var(--gold); background:var(--gold-light); transform:translateX(3px); }
+  .choice-num { width:30px; height:30px; border-radius:50%; background:var(--border); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; flex-shrink:0; margin-top:1px; transition:background 0.18s; }
+  .choice-btn.selected { border-color:var(--gold); background:var(--gold-light); }
+  .choice-btn.selected .choice-num { background:var(--gold); color:white; }
+  .choice-text { font-size:15px; line-height:1.65; }
+  .dots-nav { display:flex; justify-content:center; gap:8px; margin:16px 0 6px; flex-wrap:wrap; }
+  .dot { width:12px; height:12px; border-radius:50%; background:var(--border); cursor:pointer; transition:all 0.2s; }
+  .dot.answered { background:var(--peach); }
+  .dot.current { background:var(--navy); transform:scale(1.35); }
+  .nav-btns { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:6px; }
+  .btn-prev,.btn-next { padding:15px; border-radius:16px; font-size:15px; font-weight:700; font-family:inherit; cursor:pointer; transition:all 0.15s; }
+  .btn-prev { background:white; color:var(--warm-gray); border:1.5px solid var(--border); }
+  .btn-prev:hover { border-color:var(--navy-soft); color:var(--navy); }
+  .btn-next { background:linear-gradient(135deg,var(--peach) 0%,#FF6B3D 100%); color:white; border:none; box-shadow:0 4px 14px rgba(255,100,60,0.3); }
+  .btn-next:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(255,100,60,0.35); }
+
+  /* SUBMIT */
+  .review-header { text-align:center; padding:24px 0 16px; }
+  .review-header h2 { font-size:22px; font-weight:900; color:var(--navy); font-family:'Gmarket Sans',sans-serif; }
+  .review-header p { font-size:13px; color:var(--warm-gray); margin-top:6px; }
+  .answer-summary { background:white; border-radius:20px; padding:18px; margin:10px 0; border:1.5px solid var(--border); }
+  .ans-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+  .ans-chip { border-radius:10px; padding:10px 4px; text-align:center; background:var(--peach-pale); border:1.5px solid var(--border); }
+  .ans-chip .q-n { font-size:10px; color:var(--warm-gray); }
+  .ans-chip .q-a { font-size:14px; font-weight:700; color:var(--navy); margin-top:3px; }
+  .ans-chip.answered { border-color:var(--peach); background:var(--peach-light); }
+  .ans-chip.unanswered { border-color:var(--wrong); background:#FFF0F0; }
+  .ans-chip.unanswered .q-a { color:var(--wrong); }
+  .user-info-review { background:var(--peach-light); border-radius:16px; padding:14px; margin:10px 0; border:1.5px solid #FFD4C2; display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+  .user-info-review .info-tag { font-size:13px; color:#C04A20; display:flex; align-items:center; gap:5px; }
+  .user-info-review .info-tag strong { font-weight:700; }
+  .submit-error-box { background:#FFF0F0; border:1.5px solid #FFBEBE; border-radius:14px; padding:12px 14px; margin:10px 0; display:none; gap:8px; align-items:flex-start; }
+  .submit-error-box.show { display:flex; }
+  .submit-error-box p { font-size:13px; color:#C0392B; line-height:1.6; font-weight:500; }
+  .btn-submit { width:100%; background:linear-gradient(135deg,#2C3E6B 0%,#4A5A8A 100%); color:white; border:none; border-radius:16px; padding:17px; font-size:17px; font-weight:700; font-family:inherit; cursor:pointer; box-shadow:0 6px 20px rgba(44,62,107,0.3); transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:8px; margin-top:10px; }
+  .btn-submit:hover { transform:translateY(-2px); box-shadow:0 10px 26px rgba(44,62,107,0.35); }
+  .btn-submit:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+  .btn-back-quiz { width:100%; background:white; color:var(--warm-gray); border:1.5px solid var(--border); border-radius:16px; padding:13px; font-size:14px; font-weight:500; font-family:inherit; cursor:pointer; margin-top:8px; transition:all 0.15s; }
+  .btn-back-quiz:hover { border-color:var(--navy-soft); color:var(--navy); }
+
+  /* SENDING */
+  .sending-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.92); z-index:100; display:none; flex-direction:column; align-items:center; justify-content:center; gap:16px; }
+  .sending-overlay.show { display:flex; }
+  .spinner { width:48px; height:48px; border:4px solid var(--border); border-top-color:var(--peach); border-radius:50%; animation:spin 0.8s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .sending-overlay p { font-size:15px; font-weight:700; color:var(--navy); }
+
+  /* COMPLETE */
+  .complete-page { text-align:center; padding:32px 0; }
+  .complete-icon { font-size:80px; animation:pop 0.5s cubic-bezier(0.36,1.6,0.6,1) both; }
+  @keyframes pop { from{transform:scale(0)} to{transform:scale(1)} }
+  .complete-page h2 { font-family:'Gmarket Sans',sans-serif; font-size:26px; font-weight:700; color:var(--navy); margin:16px 0 8px; }
+  .complete-page > p { font-size:14px; color:var(--warm-gray); line-height:1.7; }
+
+  /* ADMIN */
+  .admin-locked { margin-top:20px; background:white; border-radius:18px; padding:24px; border:1.5px solid var(--border); text-align:center; }
+  .admin-locked .lock-icon { font-size:36px; margin-bottom:10px; }
+  .admin-locked h4 { font-size:15px; font-weight:700; color:var(--navy); margin-bottom:6px; }
+  .admin-locked p { font-size:12px; color:var(--warm-gray); margin-bottom:16px; }
+  .pw-row { display:flex; gap:8px; justify-content:center; }
+  .pw-input { border:1.5px solid var(--border); border-radius:10px; padding:10px 14px; font-size:14px; font-family:inherit; color:var(--navy); background:var(--cream); width:180px; }
+  .pw-input:focus { outline:none; border-color:var(--navy); }
+  .pw-input.error { border-color:var(--wrong); }
+  .btn-pw { background:var(--navy); color:white; border:none; border-radius:10px; padding:10px 18px; font-size:14px; font-weight:700; font-family:inherit; cursor:pointer; }
+  .btn-pw:hover { background:var(--navy-soft); }
+  .pw-error { font-size:12px; color:var(--wrong); margin-top:8px; display:none; }
+  .pw-error.show { display:block; }
+  .admin-area { margin-top:20px; background:white; border-radius:18px; padding:18px; border:1.5px solid var(--border); display:none; }
+  .admin-area.unlocked { display:block; }
+  .admin-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .admin-header h3 { font-size:14px; font-weight:700; color:var(--navy-soft); }
+  .btn-lock { background:none; border:1px solid var(--border); border-radius:8px; padding:4px 10px; font-size:11px; color:var(--warm-gray); cursor:pointer; font-family:inherit; }
+  .btn-lock:hover { border-color:var(--wrong); color:var(--wrong); }
+  .tabs { display:flex; gap:8px; margin-bottom:14px; }
+  .tab-btn { padding:7px 14px; border-radius:10px; border:1.5px solid var(--border); background:white; color:var(--warm-gray); font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.15s; }
+  .tab-btn.active { background:var(--navy); color:white; border-color:var(--navy); }
+  .btn-download { background:var(--mint); color:white; border:none; border-radius:12px; padding:11px 20px; font-size:13px; font-weight:700; font-family:inherit; cursor:pointer; margin-top:10px; display:inline-flex; align-items:center; gap:6px; transition:all 0.15s; }
+  .btn-download:hover { background:#3AAA82; transform:translateY(-1px); }
+  .db-table { width:100%; font-size:12px; border-collapse:collapse; margin-top:12px; }
+  .db-table th { background:var(--peach-light); padding:8px; text-align:left; font-weight:700; color:var(--navy); border-bottom:1.5px solid var(--border); }
+  .db-table td { padding:8px; border-bottom:1px solid var(--border); color:var(--navy); }
+  .db-table tr:hover td { background:var(--peach-pale); }
+  .empty-db { font-size:13px; color:var(--warm-gray); text-align:center; padding:20px; }
+
+  @media(max-width:480px){
+    .form-row { grid-template-columns:1fr; }
+    .info-rows { grid-template-columns:1fr; }
+    .nav-btns { grid-template-columns:1fr; }
+    .event-title { font-size:32px; }
+    .question-text { font-size:15px; }
+    .ox-btn { padding:24px 10px; font-size:48px; }
+    .choice-text { font-size:14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars-bg" id="starsBg"></div>
+
+<div class="sending-overlay" id="sendingOverlay">
+  <div class="spinner"></div>
+  <p>제출 중입니다. 잠시만 기다려 주세요...</p>
+</div>
+
+<div class="top-banner">
+  <span class="week-badge">📅 청렴 플러스 주간</span>
+  2026. 4. 15.(수) ~ 4. 22.(수)
+</div>
+
+<!-- PAGE 1: INTRO -->
+<div class="page active" id="page-intro">
+  <div class="container">
+    <div class="intro-hero">
+      <span class="trophy-icon">🏆</span>
+      <div class="event-title">도전 청렴 퀴즈왕!</div>
+      <div class="event-subtitle">반부패 청렴 법령 · 제도 지식 함양 퀴즈 행사</div>
+    </div>
+    <div class="info-card">
+      <h3>🎯 행사 안내</h3>
+      <div class="info-rows">
+        <div class="info-item">
+          <span class="icon">📋</span>
+          <div><div class="label">문항 구성</div><div class="value">OX 7문제 + 객관식 3문제</div></div>
+        </div>
+        <div class="info-item">
+          <span class="icon">🎁</span>
+          <div><div class="label">참여자 혜택</div><div class="value">청렴 마일리지 5점 적립<br>(우수자는 포상금 지급)</div></div>
+        </div>
+        <div class="info-item info-row-single">
+          <span class="icon">✍️</span>
+          <div><div class="label">주의 사항</div><div class="value">답안 제출 후 수정이 불가합니다. 신중하게 작성해 주세요.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="notice-box">
+      <span class="icon">🔒</span>
+      <p>입력하신 소속 부서 및 성명은 참여자의 청렴 마일리지 적립 및 우수자 포상 목적으로만 사용됩니다.</p>
+    </div>
+    <div class="form-section">
+      <h3>👤 참여자 정보 입력</h3>
+      <div class="form-row">
+        <div class="field-group">
+          <label>소속 부서 *</label>
+          <input type="text" id="inputDept" placeholder="예) 기획관리실 기획혁신부" maxlength="30">
+        </div>
+        <div class="field-group">
+          <label>성명 *</label>
+          <input type="text" id="inputName" placeholder="예) 홍길동" maxlength="10">
+        </div>
+      </div>
+      <div class="error-box" id="introErrorBox">
+        <span style="font-size:16px;flex-shrink:0;">⚠️</span>
+        <p id="introErrorMsg"></p>
+      </div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">🚀 퀴즈 시작하기</button>
+  </div>
+</div>
+
+<!-- PAGE 2: QUIZ -->
+<div class="page" id="page-quiz">
+  <div class="container">
+    <div class="quiz-header">
+      <div class="q-meta">
+        <span class="q-type-badge" id="qTypeBadge">OX</span>
+        <span class="q-num" id="qNum">문제 1</span>
+      </div>
+      <span class="q-count" id="qCount">1 / 10</span>
+    </div>
+    <div class="progress-wrap">
+      <span class="progress-label">진행률</span>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+    <div class="question-card">
+      <div class="question-text" id="questionText"></div>
+      <div id="answersArea"></div>
+    </div>
+    <div class="dots-nav" id="dotsNav"></div>
+    <div class="nav-btns">
+      <button class="btn-prev" onclick="navigate(-1)">← 이전</button>
+      <button class="btn-next" id="btnNext" onclick="navigate(1)">다음 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3: SUBMIT -->
+<div class="page" id="page-submit">
+  <div class="container">
+    <div class="review-header">
+      <h2>📝 최종 제출 확인</h2>
+      <p>아래 내용을 확인한 후 제출해 주세요.</p>
+    </div>
+    <div class="answer-summary">
+      <h3 style="font-size:13px;color:var(--warm-gray);margin-bottom:12px;">✅ 답안 현황 (10문항)</h3>
+      <div class="ans-grid" id="ansGrid"></div>
+    </div>
+    <div class="user-info-review" id="userInfoReview"></div>
+    <div class="submit-error-box" id="submitErrorBox">
+      <span style="font-size:16px;flex-shrink:0;">⚠️</span>
+      <p id="submitErrorMsg"></p>
+    </div>
+    <div class="notice-box" style="margin:10px 0;">
+      <span class="icon">⚠️</span>
+      <p>제출 후 수정이 불가합니다. 모든 문항에 응답했는지 확인해 주세요.</p>
+    </div>
+    <button class="btn-submit" id="btnSubmit" onclick="submitQuiz()">🎯 최종 제출하기</button>
+    <button class="btn-back-quiz" onclick="goBack()">← 퀴즈로 돌아가기</button>
+  </div>
+</div>
+
+<!-- PAGE 4: COMPLETE -->
+<div class="page" id="page-complete">
+  <div class="container">
+    <div class="complete-page">
+      <div class="complete-icon">🎉</div>
+      <h2>제출 완료!</h2>
+      <p>퀴즈에 참여해 주셔서 감사합니다.<br>포상 결과는 별도 공지 예정입니다. 🌟</p>
+      <div class="notice-box" style="text-align:left;margin-top:20px;">
+        <span class="icon">💡</span>
+        <p>청렴 마일리지 5점이 적립됩니다. 우수자 발표를 기대해 주세요!</p>
+      </div>
+    </div>
+
+    <div class="admin-locked" id="adminLocked">
+      <div class="lock-icon">🔐</div>
+      <h4>담당자 전용 화면</h4>
+      <p>제출 현황 및 데이터 다운로드는 담당자만 접근할 수 있습니다.<br>비밀번호를 입력해 주세요.</p>
+      <div class="pw-row">
+        <input type="password" class="pw-input" id="pwInput" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')checkPW()">
+        <button class="btn-pw" onclick="checkPW()">확인</button>
+      </div>
+      <div class="pw-error" id="pwError">비밀번호가 올바르지 않습니다.</div>
+    </div>
+
+    <div class="admin-area" id="adminArea">
+      <div class="admin-header">
+        <h3>📊 담당자 관리 화면</h3>
+        <button class="btn-lock" onclick="lockAdmin()">🔒 잠금</button>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('db')">📊 제출 현황</button>
+        <button class="tab-btn" onclick="showTab('dl')">📥 엑셀 다운로드</button>
+      </div>
+      <div id="tabDb">
+        <p style="font-size:11px;color:var(--warm-gray);margin-bottom:10px;">※ 제출 순서대로 기록됩니다. Google Sheets에도 동일하게 저장됩니다.</p>
+        <div id="dbTableWrap"></div>
+      </div>
+      <div id="tabDl" style="display:none;">
+        <p style="font-size:12px;color:var(--warm-gray);">현재까지 제출된 응답을 엑셀(.csv) 파일로 내려받습니다.</p>
+        <button class="btn-download" onclick="downloadCSV()">⬇️ 엑셀(CSV)로 내려받기</button>
+        <p style="font-size:11px;color:var(--warm-gray);margin-top:10px;">※ 전체 데이터는 Google Sheets에서도 확인하실 수 있습니다.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========================================================
+// ★ 담당자 설정 영역 ★
+// ========================================================
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRlLtdcX9GJfY998-XA38OuGYxFK_RPbIFkk4lGSsbP17FqBjtkyc42YR_Nwx0Btdd/exec';
+const ADMIN_PW   = '1234';  // ← 원하는 비밀번호로 변경하세요
+// ========================================================
+
+// ========================================================
+// ★ 퀴즈 문항 영역 ★  (문항 교체 시 이 부분만 수정)
+// ========================================================
+const questions = [
+  { type:'ox', text:'Q1. 공직자는 직무 관련 여부와 무관하게 동일인으로부터 1회 100만 원, 연간 300만 원을 초과하는 금품을 수수하면 형사 처벌을 받을 수 있다. (청탁금지법 기준)', answer:'O' },
+  { type:'ox', text:'Q2. 공직자의 배우자가 공직자의 직무와 관련하여 금품을 수수한 경우, 해당 공직자는 청탁금지법상 어떠한 제재도 받지 않는다.', answer:'X' },
+  { type:'ox', text:'Q3. 「부정청탁 및 금품 등 수수의 금지에 관한 법률」에서 정한 가액 기준 이내의 음식물 제공은 직무 관련 여부와 무관하게 모두 허용된다.', answer:'X' },
+  { type:'ox', text:'Q4. 공공기관 임직원은 소속 기관 외부로부터 강의·강연 등을 요청받은 경우, 소속 기관장에게 미리 신고하여야 한다.', answer:'O' },
+  { type:'ox', text:'Q5. 공직자는 직무와 관련된 이해충돌이 발생할 우려가 있는 경우, 이를 기관에 신고·회피해야 할 의무가 있다. (이해충돌방지법 기준)', answer:'O' },
+  { type:'ox', text:'Q6. 내부 공익신고자는 신고를 이유로 불이익 조치를 받은 경우, 국민권익위원회에 보호 조치를 신청할 수 있다.', answer:'O' },
+  { type:'ox', text:'Q7. 공직자 행동강령상 직무 관련자로부터 제공받은 골프 접대는 사회상규에 따른 의례적 행위로 허용된다.', answer:'X' },
+  {
+    type:'multi',
+    text:'Q8. 청탁금지법상 공직자가 예외적으로 수수할 수 있는 금품이 아닌 것은?',
+    choices:['원활한 직무 수행을 위한 3만 원 이내의 식사 제공','직무와 관련 없는 지인으로부터의 5만 원 이내 선물','직무 관련자가 제공하는 10만 원 상당의 경조사비','소속 기관이 허가한 외부 강연 사례금'],
+    answer:2
+  },
+  {
+    type:'multi',
+    text:'Q9. 「공직자의 이해충돌 방지법」에 따라 공직자가 반드시 신고해야 하는 경우에 해당하지 않는 것은?',
+    choices:['본인이 담당하는 계약 업무에 가족이 관련 업체 임원으로 재직 중인 경우','퇴직 전 2년간 소속했던 부서의 업무를 처리하는 경우','이전 직장에서 근무한 민간 기업과 직무 관련성이 없는 업무를 담당하는 경우','직무 관련 부동산을 보유하고 있는 사실을 알게 된 경우'],
+    answer:2
+  },
+  {
+    type:'multi',
+    text:'Q10. 다음 중 청렴 문화 확산을 위한 공공기관의 의무로 옳은 것을 모두 고른 것은?',
+    choices:['연 1회 이상 청렴 교육 실시','청렴도 측정 결과 공개','공익신고자 보호 절차 마련','위 세 가지 모두 해당'],
+    answer:3
+  }
+];
+// ========================================================
+
+let currentQ = 0;
+let answers = new Array(10).fill(null);
+let userName = '';
+let userDept = '';
+let db = [];
+
+(function(){
+  const bg=document.getElementById('starsBg');
+  const pos=[[8,12],[25,5],[60,8],[80,15],[15,30],[45,25],[90,20],[70,40],[30,50],[55,60],[10,70],[85,65],[40,80],[65,85],[20,90]];
+  const sz=[8,12,6,10,14,8,10,6,12,8,10,7,11,9,13];
+  pos.forEach((p,i)=>{ const s=document.createElement('div'); s.className='star-dec'; s.style.cssText=`left:${p[0]}%;top:${p[1]}%;width:${sz[i]}px;height:${sz[i]}px;animation-delay:${i*0.4}s`; bg.appendChild(s); });
+})();
+
+function showPage(id){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+
+function startQuiz(){
+  const dept=document.getElementById('inputDept').value.trim();
+  const name=document.getElementById('inputName').value.trim();
+  const errBox=document.getElementById('introErrorBox');
+  const errMsg=document.getElementById('introErrorMsg');
+  if(!dept&&!name){ errMsg.textContent='소속 부서와 성명을 모두 입력해 주세요.'; errBox.classList.add('show'); document.getElementById('inputDept').classList.add('error'); document.getElementById('inputName').classList.add('error'); return; }
+  if(!dept){ errMsg.textContent='소속 부서를 입력해 주세요.'; errBox.classList.add('show'); document.getElementById('inputDept').classList.add('error'); document.getElementById('inputName').classList.remove('error'); return; }
+  if(!name){ errMsg.textContent='성명을 입력해 주세요.'; errBox.classList.add('show'); document.getElementById('inputName').classList.add('error'); document.getElementById('inputDept').classList.remove('error'); return; }
+  errBox.classList.remove('show');
+  document.getElementById('inputDept').classList.remove('error');
+  document.getElementById('inputName').classList.remove('error');
+  userName=name; userDept=dept;
+  currentQ=0; answers=new Array(10).fill(null);
+  renderQuiz(); showPage('page-quiz');
+}
+
+function navigate(dir){
+  if(dir===1&&currentQ<9){ currentQ++; renderQuiz(); }
+  else if(dir===1&&currentQ===9){ showReview(); }
+  else if(dir===-1&&currentQ>0){ currentQ--; renderQuiz(); }
+}
+function goBack(){ showPage('page-quiz'); renderQuiz(); }
+
+function renderQuiz(){
+  const q=questions[currentQ]; const isOx=q.type==='ox';
+  document.getElementById('qTypeBadge').textContent=isOx?'O X':'객관식';
+  document.getElementById('qTypeBadge').className='q-type-badge '+(isOx?'badge-ox':'badge-multi');
+  document.getElementById('qNum').textContent=`문제 ${currentQ+1}`;
+  document.getElementById('qCount').textContent=`${currentQ+1} / 10`;
+  document.getElementById('questionText').textContent=q.text;
+  const answered=answers.filter(a=>a!==null).length;
+  const pct=Math.round(answered/10*100);
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressPct').textContent=pct+'%';
+  const area=document.getElementById('answersArea');
+  if(isOx){
+    const sel=answers[currentQ];
+    area.innerHTML=`<div class="ox-wrap">
+      <button class="ox-btn ${sel==='O'?'selected-O':''}" onclick="selectAnswer('O')"><span>⭕</span><span class="ox-label">O (맞다)</span></button>
+      <button class="ox-btn ${sel==='X'?'selected-X':''}" onclick="selectAnswer('X')"><span>❌</span><span class="ox-label">X (틀리다)</span></button>
+    </div>`;
+  } else {
+    area.innerHTML=`<div class="choice-list">${q.choices.map((c,i)=>`
+      <button class="choice-btn ${answers[currentQ]===i?'selected':''}" onclick="selectAnswer(${i})">
+        <span class="choice-num">${['①','②','③','④'][i]}</span>
+        <span class="choice-text">${c}</span>
+      </button>`).join('')}</div>`;
+  }
+  document.getElementById('btnNext').textContent=currentQ===9?'결과 확인 →':'다음 →';
+  document.getElementById('dotsNav').innerHTML=questions.map((_,i)=>{
+    let cls='dot';
+    if(i===currentQ) cls+=' current';
+    else if(answers[i]!==null) cls+=' answered';
+    return `<div class="${cls}" onclick="jumpTo(${i})"></div>`;
+  }).join('');
+}
+
+function selectAnswer(val){ answers[currentQ]=val; renderQuiz(); }
+function jumpTo(i){ currentQ=i; renderQuiz(); }
+
+function showReview(){
+  document.getElementById('ansGrid').innerHTML=questions.map((_,i)=>{
+    const a=answers[i];
+    const label=a===null?'미응답':(questions[i].type==='ox'?a:['①','②','③','④'][a]);
+    return `<div class="ans-chip ${a!==null?'answered':'unanswered'}"><div class="q-n">Q${i+1}</div><div class="q-a">${label}</div></div>`;
+  }).join('');
+  document.getElementById('userInfoReview').innerHTML=`
+    <div class="info-tag"><span>🏢</span><strong>${userDept}</strong></div>
+    <div class="info-tag"><span>👤</span><strong>${userName}</strong></div>
+    <div class="info-tag"><span>📝</span>응답: ${answers.filter(a=>a!==null).length} / 10</div>`;
+  document.getElementById('submitErrorBox').classList.remove('show');
+  showPage('page-submit');
+}
+
+async function submitQuiz(){
+  const unanswered=answers.filter(a=>a===null).length;
+  if(unanswered>0){
+    document.getElementById('submitErrorMsg').textContent=`아직 ${unanswered}개 문항에 응답하지 않으셨습니다. 모든 문항에 응답한 후 제출해 주세요.`;
+    document.getElementById('submitErrorBox').classList.add('show');
+    const first=answers.findIndex(a=>a===null);
+    currentQ=first;
+    setTimeout(()=>{ showPage('page-quiz'); renderQuiz(); },1800);
+    return;
+  }
+  const now=new Date();
+  const dt=now.toLocaleString('ko-KR',{timeZone:'Asia/Seoul'});
+  const ansLabels=answers.map((a,i)=>a===null?'미응답':(questions[i].type==='ox'?a:['①','②','③','④'][a]));
+  const payload={ datetime:dt, dept:userDept, name:userName, q1:ansLabels[0], q2:ansLabels[1], q3:ansLabels[2], q4:ansLabels[3], q5:ansLabels[4], q6:ansLabels[5], q7:ansLabels[6], q8:ansLabels[7], q9:ansLabels[8], q10:ansLabels[9] };
+
+  document.getElementById('sendingOverlay').classList.add('show');
+  document.getElementById('btnSubmit').disabled=true;
+
+  try {
+    await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+  } catch(err) { console.warn('전송 오류:', err); }
+
+  db.push({ seq:db.length+1, datetime:dt, dept:userDept, name:userName, answers:[...answers] });
+  try{ localStorage.setItem('quizDB',JSON.stringify(db)); }catch(e){}
+
+  document.getElementById('sendingOverlay').classList.remove('show');
+  document.getElementById('btnSubmit').disabled=false;
+  document.getElementById('adminLocked').style.display='block';
+  document.getElementById('adminArea').classList.remove('unlocked');
+  document.getElementById('pwInput').value='';
+  document.getElementById('pwError').classList.remove('show');
+  renderDBTable();
+  showPage('page-complete');
+}
+
+function loadDB(){ try{ db=JSON.parse(localStorage.getItem('quizDB')||'[]'); }catch(e){ db=[]; } }
+loadDB();
+
+function checkPW(){
+  const val=document.getElementById('pwInput').value;
+  if(val===ADMIN_PW){
+    document.getElementById('adminLocked').style.display='none';
+    document.getElementById('adminArea').classList.add('unlocked');
+    renderDBTable();
+    document.getElementById('pwError').classList.remove('show');
+  } else {
+    document.getElementById('pwInput').classList.add('error');
+    document.getElementById('pwError').classList.add('show');
+    setTimeout(()=>document.getElementById('pwInput').classList.remove('error'),600);
+  }
+}
+
+function lockAdmin(){
+  document.getElementById('adminLocked').style.display='block';
+  document.getElementById('adminArea').classList.remove('unlocked');
+  document.getElementById('pwInput').value='';
+  document.getElementById('pwError').classList.remove('show');
+}
+
+function renderDBTable(){
+  const wrap=document.getElementById('dbTableWrap');
+  if(!db.length){ wrap.innerHTML='<div class="empty-db">아직 제출된 응답이 없습니다.</div>'; return; }
+  wrap.innerHTML=`<table class="db-table">
+    <thead><tr><th>순번</th><th>제출 일시</th><th>소속 부서</th><th>성명</th><th>응답수</th></tr></thead>
+    <tbody>${db.map(e=>`<tr><td>${e.seq}</td><td>${e.datetime}</td><td>${e.dept}</td><td>${e.name}</td><td>${e.answers.filter(a=>a!==null).length}/10</td></tr>`).join('')}</tbody>
+  </table>`;
+}
+
+function showTab(t){
+  document.getElementById('tabDb').style.display=t==='db'?'block':'none';
+  document.getElementById('tabDl').style.display=t==='dl'?'block':'none';
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&t==='db')||(i===1&&t==='dl')));
+}
+
+function downloadCSV(){
+  if(!db.length){ alert('다운로드할 데이터가 없습니다.'); return; }
+  const header=['제출순번','제출일시','소속부서','성명','응답문항수'];
+  questions.forEach((_,i)=>header.push(`Q${i+1}_답안`));
+  const rows=db.map(e=>{
+    const base=[e.seq,e.datetime,e.dept,e.name,e.answers.filter(a=>a!==null).length];
+    e.answers.forEach((a,i)=>base.push(a===null?'미응답':(questions[i].type==='ox'?a:['①','②','③','④'][a])));
+    return base.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',');
+  });
+  const csv='\uFEFF'+[header.join(','),...rows].join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='청렴퀴즈왕_제출현황.csv'; a.click(); URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
